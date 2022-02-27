@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib import messages
 
 from users.forms import UserLoginForm, UserRegistrationForm, UserProfileForm
+from baskets.models import Basket
 
 def login(request):
     if request.method == 'POST':
@@ -29,12 +30,26 @@ def registration(request):
             return HttpResponseRedirect(reverse('users:login'))
     else:
         form = UserRegistrationForm()
-    context = {'title': 'GeekShop - Регистрация', 'form': form}
+    context = {
+        'title': 'GeekShop - Регистрация',
+        'form': form
+    }
     return render(request, 'users/registration.html', context)
 
 def profile(request):
-    form = UserProfileForm(instance=request.user)
-    context = {'title': 'GeekShop - Профиль', 'form': form}
+    user = request.user
+    if request.method == 'POST':
+        form = UserProfileForm(instance=user, files=request.FILES, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('users:profile'))
+    else:
+        form = UserProfileForm(instance=user)
+    context = {
+        'title': 'GeekShop - Профиль',
+        'form': form,
+        'baskets': Basket.objects.filter(user=user),
+    }
     return render(request, 'users/profile.html', context)
 
 def logout(request):
