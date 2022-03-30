@@ -49,11 +49,11 @@
                     </div>
                 </form>
                 <div class="row">
+                    <form action="{% url 'admin_staff:admin_users_delete' object.id %}" method="post">
                     <div class="col-lg-12" style="margin-top: 33px;">
-                        <form action="{% url 'admin_staff:admin_users_delete' object.id %}" method="post">
                             {% csrf_token %}
                             <input type="submit" class="btn btn-danger btn-block" value="Удалить">
-                        </form>
+                    </form>
                     </div>
                 </div>
             </div>
