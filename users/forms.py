@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 
 from users.models import User
+from users.models import UserProfile
 
 
 class UserLoginForm(AuthenticationForm):
@@ -43,7 +44,6 @@ class UserRegistrationForm(UserCreationForm):
         user.save(update_fields=['is_active', 'activation_key'])
         return user
 
-
 class UserProfileForm(UserChangeForm):
     first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control py-4'}))
     last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control py-4'}))
@@ -54,3 +54,9 @@ class UserProfileForm(UserChangeForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'image', 'username', 'email')
+
+class UserProfileEditForm(forms.ModelForm):  # https://django-crispy-forms.readthedocs.io/en/latest/
+
+    class Meta:
+        model = UserProfile
+        fields = ('about', 'gender')
